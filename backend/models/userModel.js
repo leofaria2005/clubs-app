@@ -12,7 +12,11 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'Please add a email'],
+        required: [true, 'Please add a password'],
+    },
+    isAdmin: {
+        type: Boolean,
+        required: [false],
     },
 },
 {

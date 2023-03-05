@@ -1,27 +1,24 @@
 const mongoose = require('mongoose')
 
 const clubSchema = mongoose.Schema({
+
+    name: {
+        type: String,
+        required: [true, 'Please add a name']
+    },
     user:{
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        required: false,
         ref: 'User',
     },
-    text: {
+    description: {
         type: String,
-        required: [true, 'Please add a name']
+        required: [true, 'Please add a description']
     },
-    /*description: {
-        type: String,
-        required: [true, 'Please add a name']
-    },
-    location: {
-        type: String,
-        required: [true, 'Please add a name']
-    },
-    meetingTime: {
-        type: String,
-        required: [true, 'Please add a name']
-    },*/
-})
+},
+{
+    timestaps: true
+}
+)
 
 module.exports = mongoose.model('Club', clubSchema)

@@ -9,7 +9,7 @@ const User = require('../models/userModel')
 const registerUser = asyncHandler( async(req,res) => {
     const {name, email, password} = req.body
 
-    if(!name || !email || !password) {
+    if( !name || !email || !password) {
         res.status(400)
         throw new Error('Please complete all fields')
     }
@@ -31,6 +31,7 @@ const registerUser = asyncHandler( async(req,res) => {
         name,
         email,
         password: hashedPassword,
+        isAdmin: false
     })
     
     if (user) {
@@ -52,24 +53,25 @@ const registerUser = asyncHandler( async(req,res) => {
 //@access   Public 
 const loginUser = asyncHandler( async(req,res) => {
     const {email, password} = req.body
-    
+
     //Check for email
-    const user = await User.findOne({})
+    const user = await User.findOne({email})
     
+   
     if(user && (await bcrypt.compare(password, user.password))){
-        res.status(201).json({
+        res.json({
             _id: user.id,
             name: user.name,
             email: user.email,
             token: generateToken(user._id),
-
+            isAdmin: user.isAdmin,
         })
     } else{
         res.status(400)
-        throw new Error('Invalid credentials')
+        throw new Error('Invalid credentials' )
+
     }
-
-
+    
 
     res.json({ message: 'Login user' })
 })
@@ -78,13 +80,7 @@ const loginUser = asyncHandler( async(req,res) => {
 //@route    GET /api/users/me
 //@access   Private 
 const getMe = asyncHandler( async(req,res) => {
-    const {_id, name, email} = await User.findById(req.user.id)
-
-    res.status(200).json({
-        id: _id,
-        name,
-        email,
-    })
+    res.status(200).json(req.user)
 })
 
 //Generate JWT token
